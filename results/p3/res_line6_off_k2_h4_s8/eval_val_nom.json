@@ -1,0 +1,126 @@
+{
+ "payload": null,
+ "holdout": false,
+ "event": false,
+ "ckpt": "results/p3/res_line6_off_k2_h4_s8/final.pt",
+ "iter": 1001,
+ "train_args": {
+  "run_name": "res_line6_off_k2_h4_s8",
+  "configs": [
+   "line6:T2",
+   "line6:POS_STEP"
+  ],
+  "task": "T2",
+  "n_envs": [
+   512
+  ],
+  "rollout_T": 32,
+  "total_steps": 60000000,
+  "time_limit_min": 120.0,
+  "k": 2,
+  "hist": 4,
+  "hidden": 64,
+  "no_layer_norm": false,
+  "log_std_init": -1.0,
+  "lr": 0.0003,
+  "no_anneal_lr": false,
+  "gamma": 0.99,
+  "gae_lambda": 0.95,
+  "n_epochs": 5,
+  "n_minibatches": 16,
+  "clip_coef": 0.2,
+  "ent_coef": 0.0,
+  "adv_norm_scope": "buffer",
+  "payload_max": 0.2,
+  "payload_offset_max": 1.0,
+  "payload_event_prob": 0.0,
+  "mean_bound_coef": 0.0,
+  "team_sample": false,
+  "residual": true,
+  "residual_scale": 0.2,
+  "residual_log_std_init": -2.0,
+  "residual_head_std": 0.001,
+  "device": "cuda",
+  "seed": 8,
+  "save_every": 20
+ },
+ "n_eps": 100,
+ "seed_offset": 100,
+ "cells": {
+  "line6|ATT_STEP": {
+   "RL": {
+    "success": 1.0,
+    "score": 0.7215888574410233,
+    "att_rms": 0.2784111425589765,
+    "pos_rms": 0.5238167944614647,
+    "conv": 0.65,
+    "ratio_vs_B1": 1.0007141534883226,
+    "ratio_vs_best_oracle": 0.9972909332208645
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.7210738999999999,
+    "att_rms": 0.27892609999999995,
+    "pos_rms": 0.5511303,
+    "conv": 0.87
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.723549,
+    "att_rms": 0.276451,
+    "pos_rms": 0.5287054999999999,
+    "conv": 0.88
+   }
+  },
+  "line6|POS_STEP": {
+   "RL": {
+    "success": 1.0,
+    "score": 0.6395381328810362,
+    "att_rms": 0.12265932220223692,
+    "pos_rms": 0.5406928006784457,
+    "conv": 1.0,
+    "ratio_vs_B1": 0.9953067476700568,
+    "ratio_vs_best_oracle": 0.9953067476700568
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.6425538000000001,
+    "att_rms": 0.12413260000000001,
+    "pos_rms": 0.536169,
+    "conv": 1.0
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.6424565,
+    "att_rms": 0.11979299999999998,
+    "pos_rms": 0.5363152999999999,
+    "conv": 1.0
+   }
+  },
+  "line6|T2": {
+   "RL": {
+    "success": 0.99,
+    "score": 0.41436316213638746,
+    "att_rms": 0.902928099380675,
+    "pos_rms": 0.8767881825968211,
+    "conv": 0.9466666666666668,
+    "ratio_vs_B1": 1.2637827922273728,
+    "ratio_vs_best_oracle": 1.1950159084381493
+   },
+   "B1": {
+    "success": 0.86,
+    "score": 0.3278753,
+    "att_rms": 1.0789616000000002,
+    "pos_rms": 1.0151788000000002,
+    "conv": 0.6500001999999999
+   },
+   "B1-QP": {
+    "success": 0.91,
+    "score": 0.34674279999999996,
+    "att_rms": 1.0586372000000002,
+    "pos_rms": 0.9725101000000003,
+    "conv": 0.6966671000000001
+   }
+  }
+ }
+}

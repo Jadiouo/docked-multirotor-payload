@@ -1,0 +1,30 @@
+{
+ "run_name": "single_T2",
+ "configs": [
+  "single:T2"
+ ],
+ "task": "T2",
+ "n_envs": [
+  4096
+ ],
+ "rollout_T": 64,
+ "total_steps": 150000000,
+ "time_limit_min": 27.0,
+ "k": 0,
+ "hist": 1,
+ "hidden": 64,
+ "no_layer_norm": false,
+ "log_std_init": -1.0,
+ "lr": 0.0003,
+ "no_anneal_lr": false,
+ "gamma": 0.99,
+ "gae_lambda": 0.95,
+ "n_epochs": 5,
+ "n_minibatches": 16,
+ "clip_coef": 0.2,
+ "ent_coef": 0.0,
+ "adv_norm_scope": "buffer",
+ "device": "cuda",
+ "seed": 0,
+ "save_every": 20
+}

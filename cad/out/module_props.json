@@ -1,0 +1,218 @@
+{
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "inertia": "kg*m^2",
+    "note": "座標原點 = 框架幾何中心；z 向上"
+  },
+  "mass": 0.03805891263,
+  "com": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "inertia": [
+    [
+      3.785254263e-05,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      3.785254263e-05,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      6.181772972e-05
+    ]
+  ],
+  "pitch": 0.116,
+  "pitch_note": "相鄰模組中心距 = 框架外形 W（磁鐵外表面在 +-W/2，面對面貼合）",
+  "frame_size_m": [
+    0.116,
+    0.116,
+    0.048
+  ],
+  "magnet_spacing_m": 0.04,
+  "magnet_type": "modquad_plate",
+  "magnet_size_mm": {
+    "kind": "square",
+    "width": 6.35,
+    "thickness": 0.79
+  },
+  "joint_limits": {
+    "pull_N": 9.81,
+    "shear_N": 2.943,
+    "peel_moment_Nm": 0.1962,
+    "shear_to_pull": 0.3,
+    "sources": {
+      "pull_N": "推論：ModQuad ICRA 2018: 面對面 4 顆等效 1 kg -> 1 kgf = 9.81 N / 接頭（推論）",
+      "shear_N": "推論：拉力 x 0.3（比值出處 ModQuad RAL 2019，docs 1.3；保守下限 0.15）",
+      "peel_moment_Nm": "推論：拉力 x d/2，d = 磁鐵上下間距（粗估，需實測）"
+    }
+  },
+  "mass_breakdown_kg": {
+    "crazyflie_2_1": 0.029,
+    "carbon_tubes": 0.00238379024,
+    "abs_corners": 0.002764824472,
+    "abs_magnet_clips": 0.001999011414,
+    "magnets_ndfeb": 0.0019112865,
+    "frame_without_magnets": 0.007147626127
+  },
+  "magnet_mass_each_kg": 0.0002389108125,
+  "magnets": [
+    {
+      "face": "+x",
+      "level": "bottom",
+      "center_m": [
+        0.057605,
+        0.0,
+        -0.02
+      ],
+      "outward_normal": [
+        1,
+        0,
+        0
+      ],
+      "outward_pole": "S"
+    },
+    {
+      "face": "+x",
+      "level": "top",
+      "center_m": [
+        0.057605,
+        0.0,
+        0.02
+      ],
+      "outward_normal": [
+        1,
+        0,
+        0
+      ],
+      "outward_pole": "N"
+    },
+    {
+      "face": "+y",
+      "level": "bottom",
+      "center_m": [
+        0.0,
+        0.057605,
+        -0.02
+      ],
+      "outward_normal": [
+        0,
+        1,
+        0
+      ],
+      "outward_pole": "S"
+    },
+    {
+      "face": "+y",
+      "level": "top",
+      "center_m": [
+        0.0,
+        0.057605,
+        0.02
+      ],
+      "outward_normal": [
+        0,
+        1,
+        0
+      ],
+      "outward_pole": "N"
+    },
+    {
+      "face": "-x",
+      "level": "bottom",
+      "center_m": [
+        -0.057605,
+        0.0,
+        -0.02
+      ],
+      "outward_normal": [
+        -1,
+        0,
+        0
+      ],
+      "outward_pole": "N"
+    },
+    {
+      "face": "-x",
+      "level": "top",
+      "center_m": [
+        -0.057605,
+        0.0,
+        0.02
+      ],
+      "outward_normal": [
+        -1,
+        0,
+        0
+      ],
+      "outward_pole": "S"
+    },
+    {
+      "face": "-y",
+      "level": "bottom",
+      "center_m": [
+        0.0,
+        -0.057605,
+        -0.02
+      ],
+      "outward_normal": [
+        0,
+        -1,
+        0
+      ],
+      "outward_pole": "N"
+    },
+    {
+      "face": "-y",
+      "level": "top",
+      "center_m": [
+        0.0,
+        -0.057605,
+        0.02
+      ],
+      "outward_normal": [
+        0,
+        -1,
+        0
+      ],
+      "outward_pole": "S"
+    }
+  ],
+  "crazyflie_lumped": {
+    "mass": 0.029,
+    "inertia_diag": [
+      1.503703704e-05,
+      1.503703704e-05,
+      2.330740741e-05
+    ],
+    "com_m": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "prop_clearance_m": 0.01175014361,
+  "prop_radius_m": 0.023,
+  "sources": {
+    "mass, com, inertia": "CAD計算（CadQuery 實體體積 x 密度；Crazyflie 為 lumped，兩者平行軸合成）",
+    "pitch": "CAD計算（= 框架外形 W；W=116 mm 為 ModQuad ICRA 2018 規格）",
+    "frame_size_m": "規格書（ModQuad ICRA 2018: 116x116x48 mm）",
+    "crazyflie_lumped.mass": "規格書（Bitcraze datasheet: takeoff weight 29 g）",
+    "crazyflie_lumped.inertia_diag": "假設（quadsim/params.py cf2x 慣量 x 29/27；cf2x 值來自 cf2x.urdf）",
+    "crazyflie_lumped.com_m": "假設（質心在框架幾何中心）",
+    "carbon_tubes": "CAD計算；OD 1.6 / ID 0.8 mm 為假設，密度 1.6 g/cm3 為任務指定",
+    "abs_corners": "CAD計算；邊長 8 mm、殼厚 1.2 mm 為假設，密度 1.05 g/cm3 為任務指定",
+    "joint_limits": "推論（見 joint_limits 內的 sources；沒有實測）",
+    "abs_magnet_clips": "CAD計算；尺寸為假設，密度 1.05 g/cm3 為任務指定",
+    "magnets_ndfeb": "CAD計算（尺寸：modquad_plate 為論文規格 6.35x6.35x0.79 mm，d42 為 K&J 規格書 phi6.35x3.17 mm；密度 7.5 g/cm3 為任務指定）",
+    "magnets (positions)": "CAD計算（磁鐵位置為設計選擇：側面中線、上下各一）",
+    "magnet_spacing_m": "CAD計算（= H - CORNER，由管子位置決定）",
+    "prop_clearance_m": "CAD計算（槳盤 r=23 mm 到框架實體的最短 3D 距離；槳半徑來自 params.py 註解）"
+  }
+}

@@ -1,0 +1,126 @@
+{
+ "payload": null,
+ "holdout": false,
+ "event": false,
+ "ckpt": "results/p3/line6_nom_mb_k2_h4_s8/final.pt",
+ "iter": 1220,
+ "train_args": {
+  "run_name": "line6_nom_mb_k2_h4_s8",
+  "configs": [
+   "line6:T1",
+   "line6:T2"
+  ],
+  "task": "T2",
+  "n_envs": [
+   512
+  ],
+  "rollout_T": 32,
+  "total_steps": 40000000,
+  "time_limit_min": 60.0,
+  "k": 2,
+  "hist": 4,
+  "hidden": 64,
+  "no_layer_norm": false,
+  "log_std_init": -1.0,
+  "lr": 0.0003,
+  "no_anneal_lr": false,
+  "gamma": 0.99,
+  "gae_lambda": 0.95,
+  "n_epochs": 5,
+  "n_minibatches": 16,
+  "clip_coef": 0.2,
+  "ent_coef": 0.0,
+  "adv_norm_scope": "buffer",
+  "payload_max": 0.0,
+  "payload_offset_max": 0.0,
+  "payload_event_prob": 0.0,
+  "mean_bound_coef": 0.01,
+  "team_sample": false,
+  "residual": false,
+  "residual_scale": 0.2,
+  "residual_log_std_init": -2.0,
+  "residual_head_std": 0.001,
+  "device": "cuda",
+  "seed": 8,
+  "save_every": 20
+ },
+ "n_eps": 100,
+ "seed_offset": 100,
+ "cells": {
+  "line6|ATT_STEP": {
+   "RL": {
+    "success": 0.64,
+    "score": 0.4569775539745868,
+    "att_rms": 0.789432180859027,
+    "pos_rms": 1.2089093617931892,
+    "conv": 0.0,
+    "ratio_vs_B1": 0.6337457977255685,
+    "ratio_vs_best_oracle": 0.6315778944820417
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.7210738999999999,
+    "att_rms": 0.27892609999999995,
+    "pos_rms": 0.5511303,
+    "conv": 0.87
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.723549,
+    "att_rms": 0.276451,
+    "pos_rms": 0.5287054999999999,
+    "conv": 0.88
+   }
+  },
+  "line6|POS_STEP": {
+   "RL": {
+    "success": 0.73,
+    "score": 0.45402064005580256,
+    "att_rms": 0.5746744045954064,
+    "pos_rms": 1.2032176320126085,
+    "conv": 0.09,
+    "ratio_vs_B1": 0.7065877441792462,
+    "ratio_vs_best_oracle": 0.7065877441792462
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.6425538000000001,
+    "att_rms": 0.12413260000000001,
+    "pos_rms": 0.536169,
+    "conv": 1.0
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.6424565,
+    "att_rms": 0.11979299999999998,
+    "pos_rms": 0.5363152999999999,
+    "conv": 1.0
+   }
+  },
+  "line6|T2": {
+   "RL": {
+    "success": 0.46,
+    "score": 0.21679649426322237,
+    "att_rms": 1.1314888771898215,
+    "pos_rms": 1.5015068843135728,
+    "conv": 0.12,
+    "ratio_vs_B1": 0.6612163046841967,
+    "ratio_vs_best_oracle": 0.6252371909762002
+   },
+   "B1": {
+    "success": 0.86,
+    "score": 0.3278753,
+    "att_rms": 1.0789616000000002,
+    "pos_rms": 1.0151788000000002,
+    "conv": 0.6500001999999999
+   },
+   "B1-QP": {
+    "success": 0.91,
+    "score": 0.34674279999999996,
+    "att_rms": 1.0586372000000002,
+    "pos_rms": 0.9725101000000003,
+    "conv": 0.6966671000000001
+   }
+  }
+ }
+}

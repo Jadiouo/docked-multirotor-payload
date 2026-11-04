@@ -1,0 +1,112 @@
+{
+ "ckpt": "results/p3/single_T2/final.pt",
+ "iter": 572,
+ "train_args": {
+  "run_name": "single_T2",
+  "configs": [
+   "single:T2"
+  ],
+  "task": "T2",
+  "n_envs": [
+   4096
+  ],
+  "rollout_T": 64,
+  "total_steps": 150000000,
+  "time_limit_min": 27.0,
+  "k": 0,
+  "hist": 1,
+  "hidden": 64,
+  "no_layer_norm": false,
+  "log_std_init": -1.0,
+  "lr": 0.0003,
+  "no_anneal_lr": false,
+  "gamma": 0.99,
+  "gae_lambda": 0.95,
+  "n_epochs": 5,
+  "n_minibatches": 16,
+  "clip_coef": 0.2,
+  "ent_coef": 0.0,
+  "adv_norm_scope": "buffer",
+  "device": "cuda",
+  "seed": 0,
+  "save_every": 20
+ },
+ "n_eps": 100,
+ "cells": {
+  "single|ATT_STEP": {
+   "RL": {
+    "success": 1.0,
+    "score": 0.4573481662047727,
+    "att_rms": 0.5426518337952273,
+    "pos_rms": 0.2950718059345227,
+    "conv": 0.0,
+    "ratio_vs_B1": 0.596590862782994,
+    "ratio_vs_best_oracle": 0.596590862782994
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.7666027,
+    "att_rms": 0.2333973,
+    "pos_rms": 0.28506610000000004,
+    "conv": 1.0
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.7666027,
+    "att_rms": 0.2333973,
+    "pos_rms": 0.28506610000000004,
+    "conv": 1.0
+   }
+  },
+  "single|POS_STEP": {
+   "RL": {
+    "success": 1.0,
+    "score": 0.614125554166285,
+    "att_rms": 0.5801848754896332,
+    "pos_rms": 0.5788116687505724,
+    "conv": 0.0,
+    "ratio_vs_B1": 0.9506965744090515,
+    "ratio_vs_best_oracle": 0.9506965744090515
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.6459743,
+    "att_rms": 0.11188680000000001,
+    "pos_rms": 0.5310389999999999,
+    "conv": 1.0
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.6459743,
+    "att_rms": 0.11188680000000001,
+    "pos_rms": 0.5310389999999999,
+    "conv": 1.0
+   }
+  },
+  "single|T2": {
+   "RL": {
+    "success": 0.99,
+    "score": 0.3978053750269337,
+    "att_rms": 0.7090731686291742,
+    "pos_rms": 0.9105783922100956,
+    "conv": 0.13,
+    "ratio_vs_B1": 1.027069486138967,
+    "ratio_vs_best_oracle": 0.9876360340442668
+   },
+   "B1": {
+    "success": 0.99,
+    "score": 0.3873208,
+    "att_rms": 0.5568268999999999,
+    "pos_rms": 0.929782,
+    "conv": 0.9466671
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.40278540000000007,
+    "att_rms": 0.6154547999999999,
+    "pos_rms": 0.895822,
+    "conv": 0.9200006
+   }
+  }
+ }
+}

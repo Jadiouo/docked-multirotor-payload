@@ -1,0 +1,33 @@
+{
+ "run_name": "train4_k1_h4",
+ "configs": [
+  "single:T1",
+  "line2:T1",
+  "line3:T1",
+  "square4:T1"
+ ],
+ "task": "T2",
+ "n_envs": [
+  1024
+ ],
+ "rollout_T": 64,
+ "total_steps": 75000000,
+ "time_limit_min": 27.0,
+ "k": 1,
+ "hist": 4,
+ "hidden": 64,
+ "no_layer_norm": false,
+ "log_std_init": -1.0,
+ "lr": 0.0003,
+ "no_anneal_lr": false,
+ "gamma": 0.99,
+ "gae_lambda": 0.95,
+ "n_epochs": 5,
+ "n_minibatches": 16,
+ "clip_coef": 0.2,
+ "ent_coef": 0.0,
+ "adv_norm_scope": "buffer",
+ "device": "cuda",
+ "seed": 0,
+ "save_every": 20
+}

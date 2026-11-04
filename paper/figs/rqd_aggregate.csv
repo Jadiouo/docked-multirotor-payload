@@ -1,0 +1,13 @@
+task,condition,n_configs,mean_B1-QP-yawlim,mean_estim-yawlim,mean_estim-reset-yawlim,mean_informed-event-yawlim,ratio_estim_reset_yawlim,ratio_estim_yawlim,ratio_B1_QP_yawlim
+T2,attach-center,4,0.1904,0.3435,0.3834,0.3843,0.9976,0.8939,0.4953
+T2,attach-offcenter,4,0.0268,0.2404,0.3523,0.3583,0.9831,0.6709,0.0748
+T2,drop-center,4,0.1747,0.3619,0.3845,0.3854,0.9976,0.9389,0.4533
+T2,drop-offcenter,4,0.0234,0.2687,0.3582,0.3626,0.9879,0.7411,0.0646
+POS_STEP,attach-center,4,0.4494,0.6268,0.6405,0.6409,0.9994,0.9780,0.7013
+POS_STEP,attach-offcenter,4,0.0628,0.5545,0.6357,0.6391,0.9948,0.8676,0.0983
+POS_STEP,drop-center,4,0.3376,0.6227,0.6342,0.6360,0.9971,0.9790,0.5308
+POS_STEP,drop-offcenter,4,0.0487,0.5540,0.6070,0.6204,0.9785,0.8931,0.0785
+HOVER,attach-center,4,0.6191,0.9082,0.9851,0.9880,0.9970,0.9192,0.6266
+HOVER,attach-offcenter,4,0.0791,0.7604,0.9655,0.9773,0.9879,0.7781,0.0809
+HOVER,drop-center,4,0.5722,0.9072,0.9824,0.9850,0.9974,0.9211,0.5810
+HOVER,drop-offcenter,4,0.0758,0.7994,0.9539,0.9619,0.9917,0.8311,0.0788

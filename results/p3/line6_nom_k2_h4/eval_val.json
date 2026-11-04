@@ -1,0 +1,120 @@
+{
+ "payload": null,
+ "holdout": false,
+ "event": false,
+ "ckpt": "results/p3/line6_nom_k2_h4/final.pt",
+ "iter": 4577,
+ "train_args": {
+  "run_name": "line6_nom_k2_h4",
+  "configs": [
+   "line6:T1",
+   "line6:T2"
+  ],
+  "task": "T2",
+  "n_envs": [
+   512
+  ],
+  "rollout_T": 32,
+  "total_steps": 150000000,
+  "time_limit_min": 300.0,
+  "k": 2,
+  "hist": 4,
+  "hidden": 64,
+  "no_layer_norm": false,
+  "log_std_init": -1.0,
+  "lr": 0.0003,
+  "no_anneal_lr": false,
+  "gamma": 0.99,
+  "gae_lambda": 0.95,
+  "n_epochs": 5,
+  "n_minibatches": 16,
+  "clip_coef": 0.2,
+  "ent_coef": 0.0,
+  "adv_norm_scope": "buffer",
+  "payload_max": 0.0,
+  "payload_offset_max": 0.0,
+  "payload_event_prob": 0.0,
+  "device": "cuda",
+  "seed": 7,
+  "save_every": 20
+ },
+ "n_eps": 100,
+ "seed_offset": 100,
+ "cells": {
+  "line6|ATT_STEP": {
+   "RL": {
+    "success": 0.59,
+    "score": 0.43813387382384966,
+    "att_rms": 0.8406595466077933,
+    "pos_rms": 1.3337519285913162,
+    "conv": 0.15,
+    "ratio_vs_B1": 0.6076129975358278,
+    "ratio_vs_best_oracle": 0.6055344887821691
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.7210738999999999,
+    "att_rms": 0.27892609999999995,
+    "pos_rms": 0.5511303,
+    "conv": 0.87
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.723549,
+    "att_rms": 0.276451,
+    "pos_rms": 0.5287054999999999,
+    "conv": 0.88
+   }
+  },
+  "line6|POS_STEP": {
+   "RL": {
+    "success": 0.71,
+    "score": 0.4505074575477068,
+    "att_rms": 0.6022679223357565,
+    "pos_rms": 1.243245568652991,
+    "conv": 0.47,
+    "ratio_vs_B1": 0.701120213665699,
+    "ratio_vs_best_oracle": 0.701120213665699
+   },
+   "B1": {
+    "success": 1.0,
+    "score": 0.6425538000000001,
+    "att_rms": 0.12413260000000001,
+    "pos_rms": 0.536169,
+    "conv": 1.0
+   },
+   "B1-QP": {
+    "success": 1.0,
+    "score": 0.6424565,
+    "att_rms": 0.11979299999999998,
+    "pos_rms": 0.5363152999999999,
+    "conv": 1.0
+   }
+  },
+  "line6|T2": {
+   "RL": {
+    "success": 0.54,
+    "score": 0.25820084076764194,
+    "att_rms": 1.0503225465433617,
+    "pos_rms": 1.2899961097801051,
+    "conv": 0.11666666666666665,
+    "ratio_vs_B1": 0.7874970782112649,
+    "ratio_vs_best_oracle": 0.7446465817535128
+   },
+   "B1": {
+    "success": 0.86,
+    "score": 0.3278753,
+    "att_rms": 1.0789616000000002,
+    "pos_rms": 1.0151788000000002,
+    "conv": 0.6500001999999999
+   },
+   "B1-QP": {
+    "success": 0.91,
+    "score": 0.34674279999999996,
+    "att_rms": 1.0586372000000002,
+    "pos_rms": 0.9725101000000003,
+    "conv": 0.6966671000000001
+   }
+  }
+ }
+}

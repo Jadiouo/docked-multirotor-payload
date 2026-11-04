@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.scratch/
+.pytest_cache/
+.venv-gpu/
+paper/main.aux
+paper/main.bbl
+paper/main.blg
+paper/main.fdb_latexmk
+paper/main.fls
+paper/main.log
+paper/main.out
