@@ -19,13 +19,27 @@
 
 ## 影片
 
-皆為專案自己的模擬器渲染的 MP4，說明見 [results/media/README.md](results/media/README.md)。
+下面的動畫直接在頁面上播放，點一下可看高解析度 MP4。全部由專案自己的模擬器渲染。後四支對照影片放的是 100 個 episode 中最接近平均差距的那一個；第一支放的是 B1-QP 墜毀的一個 episode。說明見 [results/media/README.md](results/media/README.md)。
 
-- [failure.mp4](results/media/failure.mp4)：line6、偏心 payload、位置階躍。B1-QP 墜毀，估計器 stack 穩定飛行。
-- [e3_gap_line8.mp4](results/media/e3_gap_line8.mp4)：line8 剩下的偏心缺口，估計器 stack 對 informed 參考。
-- [attach_event_line6.mp4](results/media/attach_event_line6.mp4)：line6 飛行中掛上 payload，有無事件重置的對照。
-- [rl_residual_line6.mp4](results/media/rl_residual_line6.mp4)：殘差 RL 對 estim-yawlim，line6，E3 位置階躍。
-- [rl_meanbound_line6.mp4](results/media/rl_meanbound_line6.mp4)：從零訓練的 mean-bound RL 對 B1，line6，無 payload，T2。
+**line6、偏心 payload、位置階躍。B1-QP 墜毀，估計器 stack 穩定飛行。**
+
+[![failure](results/media/failure.gif)](results/media/failure.mp4)
+
+**line8 剩下的偏心缺口，估計器 stack 對 informed 參考。**
+
+[![e3_gap_line8](results/media/e3_gap_line8.gif)](results/media/e3_gap_line8.mp4)
+
+**line6 飛行中掛上 payload，有無事件重置的對照。**
+
+[![attach_event_line6](results/media/attach_event_line6.gif)](results/media/attach_event_line6.mp4)
+
+**殘差 RL 對 estim-yawlim，line6，E3 位置階躍。**
+
+[![rl_residual_line6](results/media/rl_residual_line6.gif)](results/media/rl_residual_line6.mp4)
+
+**從零訓練的 mean-bound RL 對 B1，line6，無 payload，T2。**
+
+[![rl_meanbound_line6](results/media/rl_meanbound_line6.gif)](results/media/rl_meanbound_line6.mp4)
 
 ## 快速開始
 

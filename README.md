@@ -17,13 +17,27 @@ The full method, statistics and limitations are in the paper.
 
 ## Videos
 
-All videos are MP4 renders from the project's own simulator. Details are in [results/media/README.md](results/media/README.md).
+The animations below play inline; click one for the full-resolution MP4. All are renders from the project's own simulator. The four comparison clips show the episode closest to the mean gap over 100 episodes; the first clip shows an episode in which B1-QP crashes. Details are in [results/media/README.md](results/media/README.md).
 
-- [failure.mp4](results/media/failure.mp4): line6, off-center payload, position step. B1-QP crashes, the estimator stack flies.
-- [e3_gap_line8.mp4](results/media/e3_gap_line8.mp4): the remaining off-center gap on line8, estimator stack vs informed reference.
-- [attach_event_line6.mp4](results/media/attach_event_line6.mp4): payload attached in flight on line6, with and without reset on the detected event.
-- [rl_residual_line6.mp4](results/media/rl_residual_line6.mp4): residual RL vs estim-yawlim, line6, E3 position step.
-- [rl_meanbound_line6.mp4](results/media/rl_meanbound_line6.mp4): from-scratch mean-bound RL vs B1, line6, no payload, T2.
+**Line6, off-center payload, position step. B1-QP crashes, the estimator stack flies.**
+
+[![failure](results/media/failure.gif)](results/media/failure.mp4)
+
+**The remaining off-center gap on line8, estimator stack vs informed reference.**
+
+[![e3_gap_line8](results/media/e3_gap_line8.gif)](results/media/e3_gap_line8.mp4)
+
+**Payload attached in flight on line6, with and without reset on the detected event.**
+
+[![attach_event_line6](results/media/attach_event_line6.gif)](results/media/attach_event_line6.mp4)
+
+**Residual RL vs estim-yawlim, line6, E3 position step.**
+
+[![rl_residual_line6](results/media/rl_residual_line6.gif)](results/media/rl_residual_line6.mp4)
+
+**From-scratch mean-bound RL vs B1, line6, no payload, T2.**
+
+[![rl_meanbound_line6](results/media/rl_meanbound_line6.gif)](results/media/rl_meanbound_line6.mp4)
 
 ## Quick start
 
