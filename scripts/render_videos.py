@@ -6,6 +6,15 @@
         line6、HOVER（rqd_classical 的事件研究含 HOVER，pos_step=0：hover 中發生事件）；
         左 estim-reset-yawlim（estim-yawlim + CUSUM 突變偵測重置），右 estim-yawlim（無重置）。
 
+影片 3  rl_residual_line6：殘差 RL（results/p3/res_line6_off_k2_h4/final.pt，訓練 seed 7）對 estim-yawlim（snap=False）；
+        line6、E3 偏心 payload（rl_eval.e3_perturb）、POS_STEP。左 residual RL，右 estim-yawlim。
+影片 4  rl_meanbound_line6：從頭訓練的 mean-bound RL（results/p3/line6_nom_mb_k2_h4/final.pt，訓練 seed 7）對 B1；
+        line6、無 payload、T2。左 RL，右 B1。
+        影片 3、4 是「驗證 seed」（env seed = g1_gate.SEED[task] + 100，每格 100 episode）、探索性結果，不是 confirmatory。
+        載入與評估走 scripts/rl_eval.py 的路徑（load_policy／wrap_residual／PackedEnv，CPU 推論，deterministic）；
+        100 episode 平均分數到小數第三位必須與 results/p3 的評估 JSON 及 rl_eval 快取一致，否則中止、不出影片。
+        影片 3、4 的 gap = RL − 右邊的古典法。
+
 環境與控制器一律與論文實驗腳本相同（不重寫動力學／控制器）：
   gap   = scripts.classical_confirm.run_job 的 E3 路徑（g1_gate.SEED[POS_STEP] + 900000；參數 = g2_estim_tune.json best +
           g1_coord_tune.json best；estim 一律 snap=False；informed = 質量 15%、host = argmax(x) 模組、offset = OFFSET）。
@@ -20,7 +29,7 @@
 
 指令（專案根目錄；CPU）：
   CUDA_VISIBLE_DEVICES= PYTHONPATH=. \\
-      .venv/bin/python scripts/render_videos.py [--only gap event failure] [--resim]
+      .venv/bin/python scripts/render_videos.py [--only gap event failure rl_residual_line6 rl_meanbound_line6] [--resim]
 暫存：.scratch/render_videos/（模擬結果快取；--resim 強制重跑）。"""
 import argparse, dataclasses, json, pickle, subprocess, sys
 from pathlib import Path
@@ -39,6 +48,9 @@ from scripts.g1_gate import ALL_CONFIGS, E_REF, FILL_POS, load_gains, goal_of
 from scripts.p3d_factorial import cond_perturb, est_params, yaw_params, OFFSET, host_of
 from scripts import rqd_classical as rq
 from scripts.render_failure import quat_to_R
+from scripts import rl_eval as rle
+from quadsim.env import ModularEnv
+from quadsim.rl_env import PackedEnv
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "results" / "media"
@@ -46,6 +58,7 @@ SCR = ROOT / ".scratch" / "render_videos"
 CONF_OFF, N_EPS = 900000, 100
 STEP, FPS = 4, 25                       # 每 4 個控制步（0.04 s）一幀 = 25 fps，即時速度播放
 TOL = 1e-4
+VAL_OFF = 100                           # 驗證 seed offset（rl_eval --seed-offset 100）
 
 
 # ---------------------------------------------------------------------------- 模擬（記錄軌跡）
@@ -104,6 +117,66 @@ def sim_event(method, gains):
     return rec, env.pitch
 
 
+# ---------------------------------------------------------------------------- RL 影片（驗證 seed、探索性）
+def _rec_init():
+    return {k: [] for k in ("pos", "q", "thrust", "goal", "term", "d", "dp")}
+
+
+def _rec_finish(rec, T, task):
+    rec = {k: np.stack(v) for k, v in rec.items()}
+    rec["pos_err"] = np.linalg.norm(rec["goal"] - rec["pos"], axis=-1)
+    died = np.maximum.accumulate(rec["term"], axis=0)
+    valid = ~np.vstack([np.zeros((1, died.shape[1]), bool), died[:-1]])
+    rec["success"] = ~died[-1]
+    pos_f = np.where(valid, rec["pos_err"], FILL_POS)
+    rec["pos_rms"] = np.sqrt((pos_f ** 2).mean(0))
+    rec["score"] = rec["success"] * np.clip(1 - rec["pos_rms"] / E_REF[task], 0, None)
+    rec["t_end"] = np.where(died.any(0), died.argmax(0), T - 1)
+    rec["t_ev"] = None
+    return rec
+
+
+def sim_rl(ckpt, cells, task, perturb):
+    """rl_eval.run_cell_rl 的路徑（load_policy、wrap_residual、PackedEnv、deterministic、CPU），但記錄軌跡。"""
+    agent, _ = rle.load_policy(ROOT / ckpt, "cpu")
+    env = ModularEnv(cells, N_EPS, task=task, seed=g1.SEED[task] + VAL_OFF, device="cpu", perturb=perturb)
+    pe = PackedEnv(rle.wrap_residual(agent, env), agent.n_max, agent.hist)
+    obs, _ = pe.reset()
+    T, rec = env.cfg.episode_steps, _rec_init()
+    for s in range(T):
+        rec["d"].append(env.geo["d"].clone().numpy()); rec["dp"].append(env.geo["dp"].clone().numpy())
+        with torch.no_grad():
+            action, _ = agent.act(obs, deterministic=True)
+        obs, _, _, te, _, info = pe.step(action)
+        fs = info["final_state"]
+        for k, v in (("pos", fs["pos"]), ("q", fs["q"]), ("thrust", fs["thrust"]), ("goal", fs["goal_pos"])):
+            rec[k].append(v.clone().numpy())
+        rec["term"].append(te.numpy().copy())
+    return _rec_finish(rec, T, task), env.pitch
+
+
+def sim_classical_val(kind, cells, task, perturb, gains):
+    """古典對照組，驗證 seed（g1_gate.SEED[task] + 100）。estim = run_one 路徑（make_controller_p3d_off、snap=False）；B1 = run_cell 路徑。"""
+    env = ModularEnv(cells, N_EPS, task=task, seed=g1.SEED[task] + VAL_OFF, perturb=perturb)
+    if kind == "estim-yawlim":
+        y = yaw_params()
+        ctrl = qc.make_controller_p3d_off("B1-QP-estim-yawlim", dataclasses.replace(gains, yaw_ratio=y["yaw_ratio"]),
+                                          **{**dict(rate_c=y["rate_c"]), **est_params(), "snap": False})
+    else:
+        ctrl = qc.make_controller("B1", gains)
+    rec, env = sim(env, ctrl, task)
+    rec["t_ev"] = None
+    return rec, env.pitch
+
+
+def check_mean(name, scores, ref):
+    m = float(np.mean(scores))
+    ok = round(m, 3) == round(float(ref), 3)
+    print(f"  對照 {name}：影片重算平均 {m:.6f}  已發表 {float(ref):.6f}  {'一致（小數第三位）' if ok else '*** 不一致 ***'}")
+    assert ok, f"{name} 平均分數與已發表值在小數第三位不一致：{m:.6f} vs {float(ref):.6f}"
+    return float(ref)
+
+
 def select_episode(a, b):
     """gap_i = a_i − b_i；選 |gap_i − mean(gap)| 最小者，同分取最小編號（np.argmin 取第一個）。"""
     gap = np.asarray(a, float) - np.asarray(b, float)
@@ -125,6 +198,8 @@ def build(which, resim):
         return pickle.loads(f.read_bytes())
     torch.set_num_threads(2)
     gains = load_gains()
+    if which in RL_SPECS:
+        return build_rl(which, gains, f)
     ref = json.loads((ROOT / "results/p2/classical_confirm_raw.json").read_text())["cells"]
     if which == "gap":
         L, R = "estim-yawlim", "informed-offset-yawlim"
@@ -150,6 +225,53 @@ def build(which, resim):
     out = dict(info=info, ep=ep, gap_ep=float(gap[ep]), gap_mean=float(gap.mean()), mean_left=float(rl["score"].mean()),
                mean_right=float(rr["score"].mean()), ref_mean_left=mL, ref_mean_right=mR, left=pick(rl), right=pick(rr),
                pitch=pl, all_left=rl["score"].tolist(), all_right=rr["score"].tolist())
+    f.write_bytes(pickle.dumps(out))
+    return out
+
+
+RL_SPECS = {
+    "rl_residual_line6": dict(ckpt="results/p3/res_line6_off_k2_h4/final.pt", cfg="line6", task="POS_STEP", e3=True,
+                              right="estim-yawlim", left_name="Residual RL (estim-yawlim + 0.2*delta, train seed 7)",
+                              right_name="B1-QP-estim-yawlim (snap=False)", left="residual RL",
+                              ref_json="results/p3/res_line6_off_k2_h4/eval_val_E3.json",
+                              cap="E3 (15% payload, off-center), line6, POS_STEP, validation seed (offset 100)"),
+    "rl_meanbound_line6": dict(ckpt="results/p3/line6_nom_mb_k2_h4/final.pt", cfg="line6", task="T2", e3=False,
+                               right="B1", left_name="Mean-bound RL (from scratch, train seed 7)", right_name="B1",
+                               left="mean-bound RL", ref_json="results/p3/line6_nom_mb_k2_h4/eval_val.json",
+                               cap="Nominal (no payload), line6, T2, validation seed (offset 100)"),
+}
+
+
+def build_rl(which, gains, f):
+    S = RL_SPECS[which]
+    cells, task = ALL_CONFIGS[S["cfg"]], S["task"]
+    perturb = rle.e3_perturb(cells) if S["e3"] else None
+    rr, pitch = sim_rl(S["ckpt"], cells, task, perturb)
+    rc, _ = sim_classical_val(S["right"], cells, task, perturb, gains)
+    ref = json.loads((ROOT / S["ref_json"]).read_text())["cells"][f"{S['cfg']}|{task}"]
+    print(f"[{which}] 對照已發表值（{S['ref_json']}）")
+    mL = check_mean("RL 平均分數", rr["score"], ref["RL"]["score"])
+    if S["e3"]:
+        key = next(k for k in ref["vs"] if k.startswith("B1-QP-estim-yawlim"))
+        mR = check_mean("estim-yawlim（eval JSON 的 vs 欄）", rc["score"], ref["vs"][key]["score"])
+        cache = json.loads(rle.cache_path(VAL_OFF).read_text())
+        ck = next(k for k in cache if k.startswith(f"so{VAL_OFF}|E3|{S['cfg']}|B1-QP-estim-yawlim") and "informed" not in k and k.endswith(f"|{task}") and "snap=False" in k)
+        cs = np.asarray(cache[ck]["score"], float)
+        err = float(np.abs(np.asarray(rc["score"], float) - cs).max())
+        print(f"  對照 rl_eval 快取 [{ck}]：逐 episode 最大差 {err:.2e}（容差 {TOL}）")
+        assert err < TOL, f"estim-yawlim 與 rl_eval 快取的逐 episode 分數不一致：{err}"
+    else:
+        mR = check_mean("B1（eval JSON）", rc["score"], ref["B1"]["score"])
+    ep, gap = select_episode(rr["score"], rc["score"])               # RL − 古典
+    info = dict(left=S["left"], right=S["right"], left_name=S["left_name"], right_name=S["right_name"], gap_def={"rl_residual_line6": "RL - estim-yawlim", "rl_meanbound_line6": "RL - B1"}[which],
+                cfg=S["cfg"], task=task, cap=S["cap"], show_payload=S["e3"], validation=True)
+    print(f"[{which}] 平均分數 左 {rr['score'].mean():.4f} 右 {rc['score'].mean():.4f}；平均差 {gap.mean():+.4f}；選 episode {ep}，"
+          f"差 {gap[ep]:+.4f}，左 {rr['score'][ep]:.4f} 右 {rc['score'][ep]:.4f}")
+    pick = lambda r: {k: (v[:, ep] if k in ("pos", "q", "thrust", "goal", "term", "d", "dp", "pos_err") else
+                          (v[ep] if k in ("success", "pos_rms", "score", "t_end") else None)) for k, v in r.items()}
+    out = dict(info=info, ep=ep, gap_ep=float(gap[ep]), gap_mean=float(gap.mean()), mean_left=float(rr["score"].mean()),
+               mean_right=float(rc["score"].mean()), ref_mean_left=mL, ref_mean_right=mR, left=pick(rr), right=pick(rc),
+               pitch=pitch, all_left=rr["score"].tolist(), all_right=rc["score"].tolist())
     f.write_bytes(pickle.dumps(out))
     return out
 
@@ -193,12 +315,16 @@ def render(which, V, fps=FPS):
     axs = [fig.add_subplot(gs[0, k], projection="3d") for k in range(2)]
     axe = fig.add_axes([0.08, 0.06, 0.88, 0.17])
     cap = {"gap": f"E3 (15% payload at offset (+0.033, -0.033, -0.022) m), line8, POS_STEP, confirmatory seed, episode {ep} (closest to mean gap)",
-           "event": f"Payload attached in flight (off-center, 15%), line6, HOVER, confirmatory seed, episode {ep} (closest to mean gap)"}[which]
+           "event": f"Payload attached in flight (off-center, 15%), line6, HOVER, confirmatory seed, episode {ep} (closest to mean gap)"}.get(which, "")
     sub = {"gap": f"gap = informed - estim-yawlim: episode {V['gap_ep']:+.3f}, mean over 100 episodes {V['gap_mean']:+.3f}  |  mean score: {V['mean_left']:.3f} vs {V['mean_right']:.3f}",
-           "event": f"gap = estim-reset - estim-yawlim: episode {V['gap_ep']:+.3f}, mean over 100 episodes {V['gap_mean']:+.3f}  |  mean score: {V['mean_left']:.3f} vs {V['mean_right']:.3f}"}[which]
+           "event": f"gap = estim-reset - estim-yawlim: episode {V['gap_ep']:+.3f}, mean over 100 episodes {V['gap_mean']:+.3f}  |  mean score: {V['mean_left']:.3f} vs {V['mean_right']:.3f}"}.get(which, "")
+    if "cap" in info:                       # RL 影片（驗證 seed、探索性）
+        cap = f"{info['cap']}, episode {ep} (closest to mean gap)"
+        sub = (f"validation seed, exploratory, episode {ep} (closest to mean gap)  |  gap = {info['gap_def']}: {V['gap_ep']:+.3f} "
+               f"(100-ep mean {V['gap_mean']:+.3f})  |  mean score {V['mean_left']:.3f} vs {V['mean_right']:.3f}")
     fig.text(0.5, 0.975, cap, ha="center", fontsize=10.5, weight="bold")
     fig.text(0.5, 0.942, sub, ha="center", fontsize=8.5, color="#444")
-    fig.text(0.5, 0.911, "red square = payload, gold star = goal, green line = path, orange = motor thrust" +
+    fig.text(0.5, 0.911, ("red square = payload, " if info.get("show_payload", True) else "") + "gold star = goal, green line = path, orange = motor thrust" +
              (f"   |   attach event at t = {t_ev * 0.01:.2f} s (marked on the error plot)" if t_ev is not None else ""),
              ha="center", fontsize=8, color="#444")
     cols = ["#1f77b4", "#d62728"]
@@ -208,7 +334,7 @@ def render(which, V, fps=FPS):
     for i in frames_idx:
         for ax, S, nm, sc, c in ((axs[0], Ls, info["left_name"], V["all_left"][ep], cols[0]), (axs[1], Rs, info["right_name"], V["all_right"][ep], cols[1])):
             ev_on = t_ev is not None and i >= t_ev
-            show = (t_ev is None) or ev_on
+            show = ((t_ev is None) or ev_on) and info.get("show_payload", True)
             ttl = f"{nm}\nt = {i * 0.01:.2f} s    episode score = {sc:.3f}"
             if t_ev is not None and ev_on and i < t_ev + 60:
                 ttl += "\nPAYLOAD ATTACHED"
@@ -261,12 +387,12 @@ def gif_to_mp4(src, dst):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--only", nargs="+", choices=["gap", "event", "failure"], default=["gap", "event", "failure"])
+    ap.add_argument("--only", nargs="+", choices=["gap", "event", "failure", *RL_SPECS], default=["gap", "event", "failure"])
     ap.add_argument("--resim", action="store_true")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
-    names = {"gap": "e3_gap_line8", "event": "attach_event_line6"}
-    for w in ("gap", "event"):
+    names = {"gap": "e3_gap_line8", "event": "attach_event_line6", **{k: k for k in RL_SPECS}}
+    for w in ("gap", "event", *RL_SPECS):
         if w not in a.only: continue
         V = build(w, a.resim)
         fr = render(w, V)

@@ -33,7 +33,7 @@ The pre-registration was frozen after the classical exploration runs and defines
 On exploration seeds, a 15\% payload costs the best classical baseline in that condition 14.4\% of its own nominal score, against 1.7\% for $\pm20\%$ thrust-coefficient error and 0.3\% for docking error. % src: results/p2/g2.md:27 (own-degradation column),30,31 (EXPL)
 On confirmatory seeds with a centered payload, the estimator-equipped stack keeps 0.69--0.82 of its nominal score on the tracking task and 0.95--0.99 on the position step. % src: results/p2/classical_confirm.md:370,378,386,374,382,390
 Its paired difference to a payload-informed reference is at most 0.007 (upper CI bound 0.019), within the point-mass payload model. % src: results/p2/classical_confirm.md:370,378,386,374,382,390,87,75,78,81,84,90 (largest paired difference +0.007, line8 POS_STEP, line 90)
-For an off-center payload, a gap of 8/11/22\% (6/7/8 modules) remains in the position-step task. % src: README.md:24; results/p2/classical_confirm.md:281,285,289
+For an off-center payload, a gap of 8/11/22\% (6/7/8 modules) remains in the position-step task. % src: docs/notes_zh.md:24; results/p2/classical_confirm.md:281,285,289
 A from-scratch PPO did not meet the pre-registered precondition for opening the main RL experiment within the recipe budget, and an exploratory residual PPO on top of the estimator stack did not close the remaining gap for two training seeds.
 These RL statements hold for these recipes and this compute budget only.
 \end{abstract}
@@ -57,7 +57,7 @@ Three questions drive the paper.
 The main evidence is classical.
 Reinforcement learning (RL) enters as a probe with a pre-registered stopping rule.
 The main RL experiment would open only if a from-scratch policy on the six-module line reached 90\% of the estimator stack's tracking score under a 15\% payload. % src: docs/prereg.md:247,269
-Development policies stayed below 90\% of B1 on at least one task even without a payload, so that test was never run. % src: README.md:66-71; results/p3/STATUS.md:121,128,159,160
+Development policies stayed below 90\% of B1 on at least one task even without a payload, so that test was never run. % src: docs/notes_zh.md:66-71; results/p3/STATUS.md:121,128,159,160
 The only RL result with a payload is an exploratory residual policy, and the negative outcome is reported as such.
 The study was pre-registered (version 1.0, tag \texttt{prereg-v1.0}) with three disjoint seed sets, and the classical results were recomputed on fresh confirmatory seeds after the freeze. % src: docs/prereg.md:3,63-67,312,375
 Contributions:
@@ -145,7 +145,7 @@ A controller outside this family could score higher.
 
 The classical side had 20 settings each for the estimator, yawlim, and reset detector (60 in total). % src: docs/prereg.md:338
 The estimator and detector settings were scored on 32 validation episodes per setting; yawlim was tuned on training configurations. % src: docs/prereg.md:338,139
-The estimator settings were selected with snap on and a payload at a module center, and then run with snap off and no retuning. % src: results/p2/g2_estim.md:7,114; results/p2/classical_confirm.md:4; README.md:69
+The estimator settings were selected with snap on and a payload at a module center, and then run with snap off and no retuning. % src: results/p2/g2_estim.md:7,114; results/p2/classical_confirm.md:4; docs/notes_zh.md:69
 All confirmatory results use the same settings, without retuning. % src: results/p2/classical_confirm.md:4
 
 \section{Reinforcement-Learning Probe}\label{sec:rl}
@@ -164,7 +164,7 @@ Because the main experiment was not opened, we trained a residual policy: $u=\ma
 It trains on line6 \TT\ and \POS\ with payloads up to 20\% and random offsets, stopped by a 120-minute cap after $3.27\times10^7$ steps (1000 of 1831 planned iterations). % src: results/p3/STATUS.md:133; results/p3/res_line6_off_k2_h4/args.json:4-5,28,34
 It was evaluated on validation and exploration seeds only and never on confirmatory seeds. % src: docs/prereg.md:370
 
-Most recipes have a single development seed; seed 8 was added for the mean-bound and residual recipes after the freeze. % src: README.md:137; docs/prereg.md:376
+Most recipes have a single development seed; seed 8 was added for the mean-bound and residual recipes after the freeze. % src: docs/notes_zh.md:137; docs/prereg.md:376
 All RL conclusions below are exploratory.
 
 \section{Protocol}\label{sec:protocol}
@@ -201,10 +201,10 @@ No RL-versus-classical hypothesis test is reported.
 
 After the freeze we recomputed the classical results on confirmatory seeds: 384 cells, no retuning. % src: docs/prereg.md:375; results/p2/classical_confirm.md:4; results/p2/classical_confirm_raw.json (384 keys: E1 54, E2 90, E3 24, NOM 24, EV 192; counted)
 All directions agree with exploration seeds. % src: docs/prereg.md:375
-A mechanical rule flagged 9 comparison rows as inconsistent; in all nine the exploration--confirmatory difference is within $\pm0.015$ and the confirmatory paired difference is at most 0.006, so no conclusion flips (rows listed in \texttt{results/p2/classical\_confirm.md}). % src: results/p2/classical_confirm.md:87,283,287,593,638,671,683,710,719; README.md:29
-Confirmatory \TT\ scores run about 0.02--0.05 above exploration scores. % src: README.md:31
+A mechanical rule flagged 9 comparison rows as inconsistent; in all nine the exploration--confirmatory difference is within $\pm0.015$ and the confirmatory paired difference is at most 0.006, so no conclusion flips (rows listed in \texttt{results/p2/classical\_confirm.md}). % src: results/p2/classical_confirm.md:87,283,287,593,638,671,683,710,719; docs/notes_zh.md:29
+Confirmatory \TT\ scores run about 0.02--0.05 above exploration scores. % src: docs/notes_zh.md:31
 Intervals are 95\% percentile bootstrap intervals over episodes (2000 resamples)~\cite{efron1993introduction}; paired differences are bootstrapped per episode. % src: results/p2/classical_confirm.md:5
-They are conditional on the fixed set of 100 episodes and do not cover the choice of that set. % src: results/p2/classical_confirm.md:5; README.md:137
+They are conditional on the fixed set of 100 episodes and do not cover the choice of that set. % src: results/p2/classical_confirm.md:5; docs/notes_zh.md:137
 One erratum: the pre-registration text said that 6 of 12 cells of the multi-configuration RL run were below 0.90 of B1; the correct count is 4. % src: docs/prereg.md:353; results/p3/STATUS.md:86
 A second slip, a swapped snap-on/snap-off order in one table, was corrected on 2026-10-31 and does not change a conclusion. % src: results/p2/p3d_factorial.md:8
 
@@ -213,7 +213,7 @@ A second slip, a swapped snap-on/snap-off order in one table, was corrected on 2
 Over five configurations and two tasks, the best nominal classical baseline (B1-QP) scores 0.497. % src: results/p2/g2.md:22
 With a 15\% payload, the best classical baseline under payload (INDI) loses 14.4\% of its own nominal score, and B1-QP loses 90.4\% of its own. % src: results/p2/g2.md:27 (columns ``own degradation'': 14.4 and 90.4)
 A $\pm20\%$ thrust-coefficient error costs the best baseline 1.7\%, and $\pm5$~mm, $\pm2^\circ$ docking error costs 0.3\% (both B1-QP, each relative to its own nominal score). % src: results/p2/g2.md:30,31
-These numbers use exploration seeds and were not recomputed on confirmatory seeds. % src: README.md:32
+These numbers use exploration seeds and were not recomputed on confirmatory seeds. % src: docs/notes_zh.md:32
 We therefore treat payload as the main error in the rest of the paper.
 
 \subsection{With a centered payload, estim-yawlim stays close to the informed reference (confirmatory)}
@@ -253,9 +253,9 @@ E1 & \POS, line8 & 0.640 & 0.000 & 0.610 & 0.616 & $+0.007$ [$+0.006$, $+0.008$]
 E3 & \TT, line6 & 0.417 & 0.000 & 0.210 & 0.209 & $-0.001$ [$-0.008$, $+0.006$] & -- \\ % src: classical_confirm.md:340,257,258,259,283
 E3 & \TT, line7 & 0.415 & 0.000 & 0.182 & 0.181 & $-0.001$ [$-0.010$, $+0.007$] & -- \\ % src: classical_confirm.md:348,265,266,267,287
 E3 & \TT, line8 & 0.411 & 0.000 & 0.163 & 0.168 & $+0.005$ [$-0.007$, $+0.016$] & -- \\ % src: classical_confirm.md:356,273,274,275,291
-E3 & \POS, line6 & 0.642 & 0.000 & 0.548 & 0.595 & $+0.047$ [$+0.041$, $+0.052$] & 8\% \\ % src: classical_confirm.md:344,253,254,255,281; README.md:24
-E3 & \POS, line7 & 0.642 & 0.000 & 0.498 & 0.559 & $+0.061$ [$+0.052$, $+0.070$] & 11\% \\ % src: classical_confirm.md:352,261,262,263,285; README.md:24
-E3 & \POS, line8 & 0.640 & 0.000 & 0.385 & 0.494 & $+0.108$ [$+0.084$, $+0.134$] & 22\% \\ % src: classical_confirm.md:360,269,270,271,289; README.md:24
+E3 & \POS, line6 & 0.642 & 0.000 & 0.548 & 0.595 & $+0.047$ [$+0.041$, $+0.052$] & 8\% \\ % src: classical_confirm.md:344,253,254,255,281; docs/notes_zh.md:24
+E3 & \POS, line7 & 0.642 & 0.000 & 0.498 & 0.559 & $+0.061$ [$+0.052$, $+0.070$] & 11\% \\ % src: classical_confirm.md:352,261,262,263,285; docs/notes_zh.md:24
+E3 & \POS, line8 & 0.640 & 0.000 & 0.385 & 0.494 & $+0.108$ [$+0.084$, $+0.134$] & 22\% \\ % src: classical_confirm.md:360,269,270,271,289; docs/notes_zh.md:24
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -264,7 +264,7 @@ E3 & \POS, line8 & 0.640 & 0.000 & 0.385 & 0.494 & $+0.108$ [$+0.084$, $+0.134$]
 With an off-center payload, B1-QP and B1-QP-yawlim score 0 on every cell. % src: results/p2/classical_confirm.md:252-253,256-257,260-261,264-265,268-269,272-273
 On \TT\ estim-yawlim and the informed reference differ by at most 0.005 in score, and all three intervals contain 0. % src: results/p2/classical_confirm.md:283,287,291
 On \POS\ a gap remains: informed minus estim is $+0.047$, $+0.061$, $+0.108$ for line6/7/8, with 95\% intervals that exclude 0. % src: results/p2/classical_confirm.md:281,285,289
-Relative to the informed score (0.595, 0.559, 0.494) this is 8\%, 11\%, 22\%; computed from the table values it is 7.9\%, 10.9\%, 21.9\%. % src: README.md:24; results/p2/classical_confirm.md:255,263,271 (derived: 0.047/0.595, 0.061/0.559, 0.108/0.494)
+Relative to the informed score (0.595, 0.559, 0.494) this is 8\%, 11\%, 22\%; computed from the table values it is 7.9\%, 10.9\%, 21.9\%. % src: docs/notes_zh.md:24; results/p2/classical_confirm.md:255,263,271 (derived: 0.047/0.595, 0.061/0.559, 0.108/0.494)
 We use this denominator throughout.
 The same \POS\ data give informed/estim ratios of 1.086, 1.123, 1.281. % src: results/p2/classical_confirm.md:281,285,289
 
@@ -275,7 +275,7 @@ The source marks the mechanism as inference, and we have not isolated it.
 
 With an off-center payload, the estim-yawlim stack with snap on scored 0.000 on line6 and line8 \TT, against 0.197 and 0.131 with snap off (success 0\% versus 74\% and 58\%; exploration seeds). % src: results/p2/p3d_factorial.md:8 (EXPL)
 With the payload at a module center the two settings differ by at most 0.002. % src: results/p2/p3d_factorial.md:8
-The estimator was tuned and evaluated only with centered payloads, so the failure was not visible during tuning. % src: README.md:69
+The estimator was tuned and evaluated only with centered payloads, so the failure was not visible during tuning. % src: docs/notes_zh.md:69
 
 \subsection{After mid-flight payload events, the reset estimator recovers the informed reference on average (confirmatory)}
 We compare estim-yawlim with and without the change-point reset against the informed reference that knows the event, averaged over four configurations (line6, line7, line8, grid10) and three tasks. % src: docs/prereg.md:161; paper/figs/rqd_aggregate.csv
@@ -294,13 +294,13 @@ Table~\ref{tab:rl} and Fig.~\ref{fig:rl} give the RL results.
 \multicolumn{6}{@{}l}{(a) From scratch, line6 nominal: RL score / denominator} \\
 Recipe & Train seed & \ATT & \POS & \TT & Denominator \\
 \midrule
-Base & 7 & 0.61 & 0.70 & 0.79 & B1 \\ % src: README.md:74
+Base & 7 & 0.61 & 0.70 & 0.79 & B1 \\ % src: docs/notes_zh.md:74
 Base & 7 & 0.606 & 0.701 & 0.745 & max \\ % src: results/p3/STATUS.md:112-114
 Mean-bound & 7 & 0.491 & 0.892 & 0.929 & B1 \\ % src: results/p3/STATUS.md:121,159
 Mean-bound & 8 & 0.634 & 0.707 & 0.661 & B1 \\ % src: results/p3/STATUS.md:160
 Team-sample & 7 & 0.759 & 0.405 & 0.626 & B1 \\ % src: results/p3/STATUS.md:128
 \midrule
-\multicolumn{6}{@{}l}{Pipeline check, single module (not line6; one policy, seed 0): ratio to max} \\ % src: README.md:137
+\multicolumn{6}{@{}l}{Pipeline check, single module (not line6; one policy, seed 0): ratio to max} \\ % src: docs/notes_zh.md:137
 Single-module mix & 0 & 1.046 & 1.054 & 1.099 & max \\ % src: results/p3/STATUS.md:103-105
 \midrule
 \multicolumn{6}{@{}l}{(b) Residual RL, line6 E3: absolute score} \\
@@ -322,11 +322,11 @@ informed reference & -- & 0.358 & 0.604 & 0.245 & -- \\ % src: results/p3/STATUS
 All RL numbers use validation seeds, 100 episodes per cell, and the final checkpoint, except the four-configuration run, which used exploration seeds (offset 0); all are exploratory. % src: results/p3/STATUS.md:109,145-146; docs/prereg.md:103; results/p3/train4_mix_k1_h4/eval_final.json (no seed_offset)
 RL scores are not comparable with the confirmatory numbers of Table~\ref{tab:classical} because the seed sets differ. % src: paper/figs/captions.md:15; docs/prereg.md:65
 
-From scratch on line6 without payload, the base recipe reaches 0.61, 0.70, 0.79 of B1 on \ATT, \POS, \TT. % src: README.md:74
+From scratch on line6 without payload, the base recipe reaches 0.61, 0.70, 0.79 of B1 on \ATT, \POS, \TT. % src: docs/notes_zh.md:74
 Against the stronger of B1 and B1-QP, written max(B1, B1-QP), the same run gives 0.606, 0.701, 0.745. % src: results/p3/STATUS.md:112-114
 Its training success rate fell during training (\TT\ from 0.61 to 0.45). % src: results/p3/STATUS.md:115
 The RL policy saturated its actions in 0.490 of steps on line6 \TT, against 0.149 for B1 and 0.170 for B1-QP. % src: results/p3/STATUS.md:119
-The recorded failure mode is tilt flip. % src: README.md:78
+The recorded failure mode is tilt flip. % src: docs/notes_zh.md:78
 The mean-bound penalty reduced saturation to 0.157 but did not improve all tasks: ratios of 0.491, 0.892, 0.929 for seed 7 and 0.634, 0.707, 0.661 for seed 8. % src: results/p3/STATUS.md:120,159,160
 The mean-bound run also used a different learning-rate schedule than the base run, so the comparison is not controlled. % src: results/p3/STATUS.md:122
 The team-sample recipe gives 0.759, 0.405, 0.626, and the recipe budget is used up. % src: results/p3/STATUS.md:128,129
@@ -347,12 +347,12 @@ Nominal-condition \TT\ for the residual is 1.27 of B1, but the evaluation did no
 \section{Limitations}
 Each item names the conclusion it limits and what the reader should not infer.
 \begin{itemize}
-\item \emph{Two development seeds for RL.} Most recipes were trained with one development seed, and only the mean-bound and residual recipes with a second (seed 8). We consider one or two seeds too few for a conclusion about RL, and the two mean-bound seeds disagree strongly (\TT\ ratio 0.929 and 0.661). The RL results show only that these one- or two-seed runs, these recipes, and this compute budget did not close the gap; they do not show that RL cannot. The residual runs also hit the time cap, and the mean-bound recipe differs from the base in learning-rate schedule. % src: README.md:137; results/p3/STATUS.md:122,133,159,160
+\item \emph{Two development seeds for RL.} Most recipes were trained with one development seed, and only the mean-bound and residual recipes with a second (seed 8). We consider one or two seeds too few for a conclusion about RL, and the two mean-bound seeds disagree strongly (\TT\ ratio 0.929 and 0.661). The RL results show only that these one- or two-seed runs, these recipes, and this compute budget did not close the gap; they do not show that RL cannot. The residual runs also hit the time cap, and the mean-bound recipe differs from the base in learning-rate schedule. % src: docs/notes_zh.md:137; results/p3/STATUS.md:122,133,159,160
 \item \emph{Pre-registration frozen after classical exploration.} Snap off and the E3 cell were chosen after the classical results were seen, and the confirmatory E3 scores were seen before the freeze (Section~\ref{sec:protocol}). The E3 result is therefore not a blind confirmation, and E3 was chosen knowing where the exploration gap appeared.
-\item \emph{Simulation and a point-mass payload.} There is no hardware, and the estimator and the environment share the point-mass payload model, so ``recovers'' holds only within that model. Off-center payloads and snap off test the circularity only in part, and the results do not transfer to hardware or to non-point-mass, flexible, or jointed payloads. % src: README.md:133,135; docs/prereg.md:31-32
-\item \emph{Estimator tuned on centered payloads only.} The estimator was tuned only with centered payloads, and we did not test retuning on off-center payloads, so the off-center result applies to the estimator as tuned. % src: README.md:69
-\item \emph{Tuning and information favor the classical side.} The classical stack reads true state and the full nominal shape, while the RL actor sees a noisy gyroscope and accelerometer and only $k$-hop shape information (Section~\ref{sec:system}); the noisy-rate variant A3 was not run. The classical gains and settings were tuned on training configurations and validation seeds, and the RL evaluation reuses those validation seeds. The classical budget (60 settings) and the RL budget (at most 7 trainings) are not commensurable, so we claim no parity and no RL-versus-classical ranking. % src: docs/prereg.md:46,235,325,338-341; results/p2/g2_estim.md:9; README.md:138
-\item \emph{Fixed evaluation set.} Intervals cover episode sampling only, not the choice of the 100 episodes. % src: README.md:137
+\item \emph{Simulation and a point-mass payload.} There is no hardware, and the estimator and the environment share the point-mass payload model, so ``recovers'' holds only within that model. Off-center payloads and snap off test the circularity only in part, and the results do not transfer to hardware or to non-point-mass, flexible, or jointed payloads. % src: docs/notes_zh.md:133,135; docs/prereg.md:31-32
+\item \emph{Estimator tuned on centered payloads only.} The estimator was tuned only with centered payloads, and we did not test retuning on off-center payloads, so the off-center result applies to the estimator as tuned. % src: docs/notes_zh.md:69
+\item \emph{Tuning and information favor the classical side.} The classical stack reads true state and the full nominal shape, while the RL actor sees a noisy gyroscope and accelerometer and only $k$-hop shape information (Section~\ref{sec:system}); the noisy-rate variant A3 was not run. The classical gains and settings were tuned on training configurations and validation seeds, and the RL evaluation reuses those validation seeds. The classical budget (60 settings) and the RL budget (at most 7 trainings) are not commensurable, so we claim no parity and no RL-versus-classical ranking. % src: docs/prereg.md:46,235,325,338-341; results/p2/g2_estim.md:9; docs/notes_zh.md:138
+\item \emph{Fixed evaluation set.} Intervals cover episode sampling only, not the choice of the 100 episodes. % src: docs/notes_zh.md:137
 \item \emph{E3 is a corner of the training offset range.} It is not a held-out offset, so the off-center result says nothing about offsets outside the training range. % src: docs/prereg.md:314
 \item \emph{One centralized brain} with ideal communication, so the results do not cover delayed or lossy links between modules.
 \end{itemize}
@@ -360,7 +360,7 @@ Each item names the conclusion it limits and what the reader should not infer.
 \section{Conclusion}
 In simulation, an unknown payload is the costliest of the three model errors we compared (exploration seeds; the magnitudes are not on a common scale).
 On confirmatory seeds and within the point-mass payload model, the estimator stack (QP allocation, a yaw rate limit, and online mass and center-of-mass estimation) is within 0.007 score of the informed reference for centered payloads.
-For an off-center payload, a gap of 8/11/22\% remains in the position step. % src: results/p2/classical_confirm.md:75,78,81,84,87,90; README.md:24
+For an off-center payload, a gap of 8/11/22\% remains in the position step. % src: results/p2/classical_confirm.md:75,78,81,84,87,90; docs/notes_zh.md:24
 Within the tested recipes and budget, a from-scratch PPO did not reach the classical baselines on line6 without payload, and an exploratory residual PPO did not close the off-center gap in two training seeds. % src: results/p3/STATUS.md:112-114,128,159,160 (ratios in Table III)
 No test of RL against classical control was run, so the RL result is a negative probe and not a verdict.
 The protocol lesson is that freezing, recomputing on fresh seeds, and publishing the erratum are cheap in a small study and make every number above traceable.
@@ -375,11 +375,11 @@ The author reviewed the work and decided the research direction and all trade-of
 \section{Hopper Check of the PPO Implementation}\label{app:hopper}
 We checked \texttt{ppo.py} against CleanRL~\cite{huang2022cleanrl} on Hopper for $10^6$ steps. % src: results/p1/hopper_{ours,cleanrl}_seed*.csv, scripts/compare_hopper.py
 The acceptance rule was changed after seeing results.
-The original rule, that all three of our seeds fall inside the CleanRL range, was not met (our lowest seed 1860 against a CleanRL minimum of 1940). % src: README.md (Limitations item 4); per-seed finals recomputed from results/p1/hopper_*_seed*.csv
-We replaced it with: the 95\% bootstrap CI of the mean difference lies within $\pm15\%$ of the CleanRL mean. % src: README.md (Limitations item 4)
+The original rule, that all three of our seeds fall inside the CleanRL range, was not met (our lowest seed 1860 against a CleanRL minimum of 1940). % src: docs/notes_zh.md (Limitations item 4); per-seed finals recomputed from results/p1/hopper_*_seed*.csv
+We replaced it with: the 95\% bootstrap CI of the mean difference lies within $\pm15\%$ of the CleanRL mean. % src: docs/notes_zh.md (Limitations item 4)
 At 8 seeds the CI was $[-14.2\%,+15.1\%]$ and narrowly missed; we then extended to 12 seeds as a declared sequential extension. % src: results/p1/hopper_ci.json (scripts/hopper_ci.py)
 At 12 seeds the means are 2275.3 (ours) and 2268.1 (CleanRL), a difference of $+0.3\%$ with CI $[-10.8\%,+11.6\%]$, which passes. % src: results/p1/hopper_ci.json (scripts/hopper_ci.py)
-Because the rule was applied sequentially, the nominal $\alpha$ is slightly inflated. % src: README.md (Limitations item 4)
+Because the rule was applied sequentially, the nominal $\alpha$ is slightly inflated. % src: docs/notes_zh.md (Limitations item 4)
 The Hopper seeds are training seeds and are not environment seeds of the three sets in Table~\ref{tab:seeds}.
 
 \bibliographystyle{IEEEtran}
